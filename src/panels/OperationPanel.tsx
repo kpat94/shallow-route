@@ -17,16 +17,14 @@ export const OperationPanel: FC<{ id: number }> = ({ id }) => {
     // `models.ts`.
     const operationPromise = operationById(id);
 
-    operationPromise
-      .then((resolve) => {
-        setOperation({
-          name: resolve?.name ? resolve?.name : "",
-          routeIds: resolve?.routes
-            ? resolve?.routes.map((route) => route.id)
-            : [],
-        });
-      })
-      .then((resolve) => {});
+    operationPromise.then((resolve) => {
+      setOperation({
+        name: resolve?.name ? resolve?.name : "",
+        routeIds: resolve?.routes
+          ? resolve?.routes.map((route) => route.id)
+          : [],
+      });
+    });
   }, [id, setOperation]);
 
   return (
