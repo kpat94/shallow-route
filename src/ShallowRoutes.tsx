@@ -51,8 +51,6 @@ export const ShallowRoutes: FC = () => {
     // statement can be omitted.
 
     // You must change the content below.
-    setOperationId(0);
-    setRouteId(0);
     setSegmentId(parsedId);
   }, [id, type]);
 
