@@ -56,27 +56,30 @@ export const ShallowRoutes: FC = () => {
     // statement can be omitted.
 
     // You must change the content below.
-    setSegmentId("loading segment");
-    segmentById(parsedId).then((segment) => {
-      if (!segment) {
-        setSegmentId("missing segment");
-        return;
-      }
-
-      routeById(segment.routeId).then((route) => {
-        if (!route) {
-          setRouteId("missing route");
+    if (type === "segments") {
+      setSegmentId("loading segment");
+      segmentById(parsedId).then((segment) => {
+        if (!segment) {
+          setSegmentId("missing segment");
           return;
         }
 
-        setOperationId(route.operationId);
-        setRouteId(route.id);
+        routeById(segment.routeId).then((route) => {
+          if (!route) {
+            setRouteId("missing route");
+            return;
+          }
+
+          setOperationId(route.operationId);
+          setRouteId(route.id);
+        });
+        setSegmentId(parsedId);
       });
-      setSegmentId(parsedId);
-    });
-    return;
+      return;
+    }
   }, [id, type]);
 
+  console.log(`Id: ${id}`);
   console.log(`Route id: ${routeId}`);
   console.log(`Operation is: ${operationId}`);
 
