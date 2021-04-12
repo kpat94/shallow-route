@@ -15,9 +15,8 @@ export const OperationPanel: FC<{ id: number }> = ({ id }) => {
   useEffect(() => {
     // You must change this function.  You will need to use the functions in
     // `models.ts`.
-    const operationPromise = operationById(id);
 
-    operationPromise.then((resolve) => {
+    operationById(id).then((resolve) => {
       setOperation({
         name: resolve?.name ? resolve?.name : "",
         routeIds: resolve?.routes

@@ -9,9 +9,7 @@ export const SegmentPanel: FC<{ id: number }> = ({ id }) => {
     // You must change this function.  You will need to use the functions in
     // `models.ts`.
 
-    const segmentsPromise = segmentById(id);
-
-    segmentsPromise.then((resolve) => {
+    segmentById(id).then((resolve) => {
       setName(resolve?.name ? resolve.name : "");
     });
   }, [id, setName]);
