@@ -12,3 +12,4 @@
 
 - Render OperationPanel only for the route "operation"
 - Display "loading segment" between segment changes
+- Add loading operation for each operation change
