@@ -1,7 +1,6 @@
-import { open } from "node:fs";
 import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { operationById, operations, routeById, segmentById } from "./models";
+import { operationById, routeById, segmentById } from "./models";
 import { OperationPanel } from "./panels/OperationPanel";
 import { RoutePanel } from "./panels/RoutePanel";
 import { SegmentPanel } from "./panels/SegmentPanel";
@@ -75,16 +74,16 @@ export const ShallowRoutes: FC = () => {
         <div>{operationId}</div>
       )}
       {typeof operationId === "number" && <OperationPanel id={operationId} />}
-      {type != "operations" && typeof routeId === "string" && routeId && (
+      {type !== "operations" && typeof routeId === "string" && routeId && (
         <div>{routeId}</div>
       )}
-      {type != "operations" && typeof routeId === "number" && (
+      {type !== "operations" && typeof routeId === "number" && (
         <RoutePanel id={routeId} />
       )}
-      {type != "operations" && typeof segmentId === "string" && segmentId && (
+      {type !== "operations" && typeof segmentId === "string" && segmentId && (
         <div>{segmentId}</div>
       )}
-      {type != "operations" && typeof segmentId === "number" && (
+      {type !== "operations" && typeof segmentId === "number" && (
         <SegmentPanel id={segmentId} />
       )}
     </>
