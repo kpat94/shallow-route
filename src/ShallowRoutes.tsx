@@ -63,10 +63,22 @@ export const ShallowRoutes: FC = () => {
         return;
       }
 
+      routeById(segment.routeId).then((route) => {
+        if (!route) {
+          setRouteId("missing route");
+          return;
+        }
+
+        setOperationId(route.operationId);
+        setRouteId(route.id);
+      });
       setSegmentId(parsedId);
     });
     return;
   }, [id, type]);
+
+  console.log(`Route id: ${routeId}`);
+  console.log(`Operation is: ${operationId}`);
 
   return (
     <>
