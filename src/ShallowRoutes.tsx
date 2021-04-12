@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { routeById } from "./models";
+import { routeById, segmentById } from "./models";
 import { OperationPanel } from "./panels/OperationPanel";
 import { RoutePanel } from "./panels/RoutePanel";
 import { SegmentPanel } from "./panels/SegmentPanel";
@@ -17,8 +17,6 @@ export const ShallowRoutes: FC = () => {
   const [segmentId, setSegmentId] = useState<number | string>(
     "loading segment"
   );
-
-  let isOperations: boolean = false;
 
   useEffect(() => {
     // You must change this function.  You will need to use the functions in
@@ -51,7 +49,16 @@ export const ShallowRoutes: FC = () => {
     // statement can be omitted.
 
     // You must change the content below.
-    setSegmentId(parsedId);
+    setSegmentId("loading segment");
+    segmentById(parsedId).then((segment) => {
+      if (!segment) {
+        setSegmentId("missing segment");
+        return;
+      }
+
+      setSegmentId(parsedId);
+    });
+    return;
   }, [id, type]);
 
   return (
