@@ -1,6 +1,7 @@
+import { open } from "node:fs";
 import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { routeById, segmentById } from "./models";
+import { operationById, operations, routeById, segmentById } from "./models";
 import { OperationPanel } from "./panels/OperationPanel";
 import { RoutePanel } from "./panels/RoutePanel";
 import { SegmentPanel } from "./panels/SegmentPanel";
@@ -25,8 +26,15 @@ export const ShallowRoutes: FC = () => {
 
     // You must change the content of this condition block.
     if (type === "operations") {
-      setOperationId(parsedId);
-      return;
+      setOperationId("loading operation");
+      operationById(parsedId).then((operation) => {
+        if (!operation) {
+          setOperationId("missing operation");
+          return;
+        }
+        setOperationId(parsedId);
+        return;
+      });
     }
 
     // You may change the content of this condition block.
