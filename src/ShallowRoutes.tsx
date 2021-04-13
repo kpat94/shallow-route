@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
 import { operationById, routeById, segmentById } from "./models";
 import { OperationPanel } from "./panels/OperationPanel";
@@ -13,6 +13,8 @@ export const ShallowRoutes: FC = () => {
   const [operationId, setOperationId] = useState<number | string>(
     "loading operation"
   );
+  // let operationId: number | string = "loading operation";
+  const operationIdRef = useRef<number | string>(operationId);
   const [routeId, setRouteId] = useState<number | string>("loading route");
   const [segmentId, setSegmentId] = useState<number | string>(
     "loading segment"
@@ -21,17 +23,26 @@ export const ShallowRoutes: FC = () => {
   useEffect(() => {
     // You must change this function.  You will need to use the functions in
     // `models.ts`
+    // let parsedId: number;
+
     const parsedId = parseInt(id, 10);
 
+    // parsedId = parseInt(id, 10);
     // You must change the content of this condition block.
     if (type === "operations") {
       setOperationId("loading operation");
+      // operationId = "loading operation";
+      // operationIdRef.current = "loading operation";
       operationById(parsedId).then((operation) => {
         if (!operation) {
           setOperationId("missing operation");
+          // operationIdRef.current = "missing operation";
           return;
         }
         setOperationId(parsedId);
+        console.log(`Setting operation id`);
+        // operationIdRef.current = operationId;
+        console.log(`Set operation id: ${operationIdRef.current}`);
         return;
       });
     }
@@ -47,9 +58,9 @@ export const ShallowRoutes: FC = () => {
         }
 
         setOperationId(route.operationId);
+        // operationIdRef.current = operationId;
         setRouteId(parsedId);
       });
-      return;
     }
 
     // `type` must be 'segments' therefore the `if (type === 'segments')`
@@ -71,12 +82,15 @@ export const ShallowRoutes: FC = () => {
           }
 
           setOperationId(route.operationId);
+          // operationIdRef.current = operationId;
           setRouteId(route.id);
         });
         setSegmentId(parsedId);
       });
       return;
     }
+
+    // console.log(`Operation is: ${operationIdRef.current}`);
   }, [id, type]);
 
   console.log(`Id: ${id}`);
