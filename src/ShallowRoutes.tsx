@@ -1,22 +1,30 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
 import { operationById, routeById, segmentById } from "./models";
 import { OperationPanel } from "./panels/OperationPanel";
 import { RoutePanel } from "./panels/RoutePanel";
 import { SegmentPanel } from "./panels/SegmentPanel";
 
+const LAST_CLICK_TIMEOUT = 2500;
+
 export const ShallowRoutes: FC = () => {
   const { id, type } = useParams<{
     type: "operations" | "routes" | "segments";
     id: string;
   }>();
+
   const [operationId, setOperationId] = useState<number | string>(
     "loading operation"
   );
+  const operationIdRef = useRef<number | string>(operationId);
+
   const [routeId, setRouteId] = useState<number | string>("loading route");
+  const routeIdRef = useRef<number | string>(routeId);
+
   const [segmentId, setSegmentId] = useState<number | string>(
     "loading segment"
   );
+  const segmentIdRef = useRef<number | string>(segmentId);
 
   useEffect(() => {
     // You must change this function.  You will need to use the functions in
@@ -25,13 +33,14 @@ export const ShallowRoutes: FC = () => {
 
     // You must change the content of this condition block.
     if (type === "operations") {
-      setOperationId("loading operation");
+      operationIdRef.current = "loading operation";
       operationById(parsedId).then((operation) => {
         if (!operation) {
-          setOperationId("missing operation");
+          operationIdRef.current = "missing operation";
           return;
         }
-        setOperationId(parsedId);
+        setOperationId("loading operation");
+        operationIdRef.current = parsedId;
         return;
       });
     }
@@ -39,17 +48,18 @@ export const ShallowRoutes: FC = () => {
     // You may change the content of this condition block.
     if (type === "routes") {
       setSegmentId("");
+      segmentIdRef.current = "";
       setRouteId("loading route");
+      routeIdRef.current = "loading route";
       routeById(parsedId).then((route) => {
         if (!route) {
-          setRouteId("missing route");
+          routeIdRef.current = "missing route";
           return;
         }
 
-        setOperationId(route.operationId);
-        setRouteId(parsedId);
+        operationIdRef.current = route.operationId;
+        routeIdRef.current = parsedId;
       });
-      return;
     }
 
     // `type` must be 'segments' therefore the `if (type === 'segments')`
@@ -58,30 +68,49 @@ export const ShallowRoutes: FC = () => {
     // You must change the content below.
     if (type === "segments") {
       setSegmentId("loading segment");
+      segmentIdRef.current = "loading segment";
       segmentById(parsedId).then((segment) => {
         if (!segment) {
-          setSegmentId("missing segment");
+          segmentIdRef.current = "missing segment";
           return;
         }
 
         routeById(segment.routeId).then((route) => {
           if (!route) {
-            setRouteId("missing route");
+            routeIdRef.current = "missing route";
             return;
           }
 
-          setOperationId(route.operationId);
-          setRouteId(route.id);
+          operationIdRef.current = operationId;
+          routeIdRef.current = route.id;
         });
-        setSegmentId(parsedId);
+        segmentIdRef.current = parsedId;
       });
       return;
     }
   }, [id, type]);
 
-  console.log(`Id: ${id}`);
-  console.log(`Route id: ${routeId}`);
-  console.log(`Operation is: ${operationId}`);
+  // Perform all state updates after timeout
+  useEffect(() => {
+    setTimeout(() => {
+      setOperationId(operationIdRef.current);
+    }, LAST_CLICK_TIMEOUT);
+    setOperationId("loading operation");
+  }, [operationIdRef.current]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setRouteId(routeIdRef.current);
+    }, LAST_CLICK_TIMEOUT);
+    setRouteId("loading route");
+  }, [routeIdRef.current]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setSegmentId(segmentIdRef.current);
+    }, LAST_CLICK_TIMEOUT);
+    setSegmentId("loading segment");
+  }, [segmentIdRef.current]);
 
   return (
     <>
